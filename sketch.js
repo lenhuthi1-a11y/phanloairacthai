@@ -1,4 +1,5 @@
 // Copyright (c) 2019 ml5
+//
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
@@ -8,69 +9,62 @@ Webcam Image Classification using a pre-trained customized model and p5.js
 This example uses p5 preload function to create the classifier
 === */
 
-// Biến classifier
+// Classifier Variable
 let classifier;
-
-// URL model
+// Model URL
 let imageModelURL = 'https://teachablemachine.withgoogle.com/models/jN8A5yARo/';
 
 // Video
 let video;
 let flippedVideo;
-
-// Lưu kết quả phân loại
+// To store the classification
 let label = "";
 
-// Load model trước
+// Load the model first
 function preload() {
   classifier = ml5.imageClassifier(imageModelURL + 'model.json');
 }
 
 function setup() {
   createCanvas(320, 260);
-
-  // Tạo video
+  // Create the video
   video = createCapture(VIDEO);
   video.size(320, 240);
   video.hide();
 
-  // Lật video để hiển thị đúng chiều
-  flippedVideo = ml5.flipImage(video);
-
-  // Bắt đầu phân loại
+  flippedVideo = ml5.flipImage(video)
+  // Start classifying
   classifyVideo();
 }
 
 function draw() {
   background(0);
-
-  // Vẽ video
+  // Draw the video
   image(flippedVideo, 0, 0);
 
-  // Vẽ nhãn kết quả
+  // Draw the label
   fill(255);
   textSize(16);
   textAlign(CENTER);
   text(label, width / 2, height - 4);
 }
 
-// Phân loại frame hiện tại
+// Get a prediction for the current video frame
 function classifyVideo() {
-  flippedVideo = ml5.flipImage(video);
+  flippedVideo = ml5.flipImage(video)
   classifier.classify(flippedVideo, gotResult);
 }
 
-// Khi nhận được kết quả
+// When we get a result
 function gotResult(error, results) {
+  // If there is an error
   if (error) {
     console.error(error);
     return;
   }
-
-  // Lấy nhãn kết quả đầu tiên
+  // The results are in an array ordered by confidence.
+  // console.log(results[0]);
   label = results[0].label;
-
-  // Phân loại tiếp
+  // Classifiy again!
   classifyVideo();
 }
-
