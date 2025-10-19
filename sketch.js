@@ -73,3 +73,4 @@ function gotResult(error, results) {
   // Phân loại tiếp
   classifyVideo();
 }
+
